@@ -36,7 +36,7 @@ public:
         ENDWHILE,
         ELSE,
         END,      // Fin de entrada
-        VAR,
+        // VAR,
         COMA,
         TRUE,
         FALSE,

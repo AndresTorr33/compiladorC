@@ -1,0 +1,11 @@
+.venv
+venv/
+__pycache__/
+frontend/node_modules/
+cmake-build-debug
+.idea
+outputs
+a.out
+*.s
+*.o
+temp/
