@@ -52,6 +52,23 @@ ostream& operator<<(ostream& outs, const Token& tok) {
         case Token::ENDFUN:    outs << "TOKEN(ENDFUN, \""    << tok.text << "\")"; break;
         case Token::RETURN:    outs << "TOKEN(RETURN, \""    << tok.text << "\")"; break;
 
+        // NUEVOS TOKENS
+        case Token::LBRACE:    outs << "TOKEN(LBRACE, \""    << tok.text << "\")"; break;
+        case Token::RBRACE:    outs << "TOKEN(RBRACE, \""    << tok.text << "\")"; break;
+        case Token::QUESTION:    outs << "TOKEN(QUESTION, \""    << tok.text << "\")"; break;
+        case Token::COLON:    outs << "TOKEN(COLON, \""    << tok.text << "\")"; break;
+        case Token::BACKSLASH:    outs << "TOKEN(BACKSLASH, \""    << tok.text << "\")"; break;
+        case Token::HASHTAG:    outs << "TOKEN(HASHTAG, \""    << tok.text << "\")"; break;
+        case Token::DOT:    outs << "TOKEN(DOT, \""    << tok.text << "\")"; break;
+        case Token::GT:    outs << "TOKEN(GT, \""    << tok.text << "\")"; break;
+        case Token::FOR:    outs << "TOKEN(FOR, \""    << tok.text << "\")"; break;
+        case Token::UNSIGNED:    outs << "TOKEN(UNSIGNED, \""    << tok.text << "\")"; break;
+        case Token::INT:    outs << "TOKEN(INT, \""    << tok.text << "\")"; break;
+        case Token::FLOAT:    outs << "TOKEN(FLOAT, \""    << tok.text << "\")"; break;
+        case Token::BOOL:    outs << "TOKEN(BOOL, \""    << tok.text << "\")"; break;
+        case Token::AUTO:    outs << "TOKEN(AUTO, \""    << tok.text << "\")"; break;
+        
+
         case Token::END:    outs << "TOKEN(END)"; break;
     }
     return outs;
