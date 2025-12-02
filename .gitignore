@@ -9,3 +9,4 @@ a.out
 *.s
 *.o
 temp/
+.vscode/
