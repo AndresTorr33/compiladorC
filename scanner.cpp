@@ -75,7 +75,7 @@ Token* Scanner::nextToken() {
     // Operadores
     else if (strchr("+/-*();=<,", c)) {
         switch (c) {
-            case '<': token = new Token(Token::LE,  c); break;
+            case '<': token = new Token(Token::LT,  c); break;
             case '+': token = new Token(Token::PLUS,  c); break;
             case '-': token = new Token(Token::MINUS, c); break;
             case '*': 

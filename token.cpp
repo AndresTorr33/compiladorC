@@ -34,7 +34,7 @@ ostream& operator<<(ostream& outs, const Token& tok) {
         case Token::ID:    outs << "TOKEN(ID, \""    << tok.text << "\")"; break;
         case Token::NUM:    outs << "TOKEN(NUM, \""    << tok.text << "\")"; break;
         case Token::ERR:    outs << "TOKEN(ERR, \""    << tok.text << "\")"; break;
-        case Token::LE:    outs << "TOKEN(LE, \""    << tok.text << "\")"; break;
+        case Token::LT:    outs << "TOKEN(LT, \""    << tok.text << "\")"; break;
         case Token::PRINT:    outs << "TOKEN(PRINT, \""    << tok.text << "\")"; break;
         case Token::SEMICOL:    outs << "TOKEN(SEMICOL, \""    << tok.text << "\")"; break;
         case Token::ASSIGN:    outs << "TOKEN(ASSIGN, \""    << tok.text << "\")"; break;

@@ -21,7 +21,7 @@ public:
         NUM,     // Número
         ERR,     // Error
         ID,      // ID
-        LE,
+        LT,     // cambiado
         FUN,
         ENDFUN,
         RETURN,
@@ -39,7 +39,28 @@ public:
         VAR,
         COMA,
         TRUE,
-        FALSE
+        FALSE,
+
+        // Simbolos para C
+        LBRACE,
+        RBRACE,
+        QUESTION,
+        COLON,
+        BACKSLASH,
+        HASHTAG,
+        DOT, // para floats
+        
+        // para Nuevas operaciones
+        GT,
+        FOR,
+
+        // Para tipos
+        UNSIGNED,
+        INT,
+        FLOAT,
+        LONG,
+        BOOL,
+        AUTO
     };
 
     // Atributos
