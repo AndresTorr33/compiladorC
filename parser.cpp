@@ -193,7 +193,7 @@ else if (match(Token::IF)) {
 Exp* Parser::parseCE() {
     Exp* l = parseBE();
     if (match(Token::LT)) {
-        BinaryOp op = LE_OP;
+        BinaryOp op = LT_OP;
         Exp* r = parseBE();
         l = new BinaryExp(l, r, op);
     }

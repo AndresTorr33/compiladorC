@@ -17,7 +17,7 @@ enum BinaryOp {
     MUL_OP, 
     DIV_OP,
     POW_OP,
-    LE_OP
+    LT_OP
 };
 
 // Clase abstracta Exp
@@ -171,6 +171,20 @@ public:
     int accept(Visitor* visitor);
 };
 
+
+// NUEVAS
+
+class ForStm: public Stm {
+public:
+    string id; // el i
+    Exp* inicializacion;
+    Exp* condicion;
+    Stm* actualizacion;
+    Body* cuerpo;
+    ForStm(string, Exp*, Exp*, Stm*, Body*);
+    ~ForStm();
+    int accept(Visitor* visitor);
+};
 
 
 #endif // AST_H
