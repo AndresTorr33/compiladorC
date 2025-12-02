@@ -9,6 +9,7 @@ using namespace std;
 
 class Visitor;
 class VarDec;
+class TypeVisitor;
 
 // Operadores binarios soportados
 enum BinaryOp { 
@@ -26,6 +27,9 @@ public:
     virtual int  accept(Visitor* visitor) = 0;
     virtual ~Exp() = 0;  // Destructor puro → clase abstracta
     static string binopToChar(BinaryOp op);  // Conversión operador → string
+
+    //Typechecker
+    virtual Type* accept(TypeVisitor* visitor) = 0; // Para verificador de tipos
 };
 
 // Expresión binaria
@@ -38,6 +42,9 @@ public:
     BinaryExp(Exp* l, Exp* r, BinaryOp op);
     ~BinaryExp();
 
+    //Typechecker
+    Type* accept(TypeVisitor* visitor);
+
 };
 
 // Expresión numérica
@@ -47,6 +54,9 @@ public:
     int accept(Visitor* visitor);
     NumberExp(int v);
     ~NumberExp();
+
+    //Typechecker
+    Type* accept(TypeVisitor* visitor);
 };
 
 // Expresión numérica
@@ -56,13 +66,35 @@ public:
     int accept(Visitor* visitor);
     IdExp(string v);
     ~IdExp();
+
+    //Typechecker
+    Type* accept(TypeVisitor* visitor);
 };
 
+// Nuevo
+class BoolExp : public Exp {
+public:
+    int valor;
 
+    BoolExp(){};
+    ~BoolExp(){};
+
+    int accept(Visitor* visitor);
+
+    //Typechecker
+    Type* accept(TypeVisitor* visitor);
+};
+// Nuevo
+
+
+// Base para sentencias
 class Stm{
 public:
     virtual int accept(Visitor* visitor) = 0;
     virtual ~Stm() = 0;
+
+    //Typechecker
+    virtual void accept(TypeVisitor* visitor) = 0;
 };
 
 class VarDec{
@@ -72,6 +104,9 @@ public:
     VarDec();
     int accept(Visitor* visitor);
     ~VarDec();
+
+    //Typechecker
+    void accept(TypeVisitor* visitor);
 };
 
 
@@ -82,10 +117,13 @@ public:
     int accept(Visitor* visitor);
     Body();
     ~Body();
+
+    //Typechecker
+    void accept(TypeVisitor* visitor);
 };
 
 
-
+// Sentencias
 
 class IfStm: public Stm {
 public:
@@ -115,6 +153,9 @@ public:
     AssignStm(string, Exp*);
     ~AssignStm();
     int accept(Visitor* visitor);
+
+    //Typechecker
+    void accept(TypeVisitor* visitor);
 };
 
 class PrintStm: public Stm {
@@ -123,9 +164,24 @@ public:
     PrintStm(Exp*);
     ~PrintStm();
     int accept(Visitor* visitor);
+
+    //Typechecker
+    void accept(TypeVisitor* visitor);
 };
 
-
+// Nuevo
+class ForStm: public Stm {
+public:
+    string id; // el i
+    Exp* inicializacion;
+    Exp* condicion;
+    Stm* actualizacion;
+    Body* cuerpo;
+    ForStm(string, Exp*, Exp*, Stm*, Body*);
+    ~ForStm();
+    int accept(Visitor* visitor);
+};
+// Nuevo
 
 
 
@@ -136,6 +192,9 @@ public:
     ReturnStm(){};
     ~ReturnStm(){};
     int accept(Visitor* visitor);
+
+    //Typechecker
+    void accept(TypeVisitor* visitor);
 };
 
 class FcallExp: public Exp {
@@ -145,6 +204,9 @@ public:
     int accept(Visitor* visitor);
     FcallExp(){};
     ~FcallExp(){};
+
+    //Typechecker
+    Type* accept(TypeVisitor* visitor);
 };
 
 
@@ -160,6 +222,9 @@ public:
     int accept(Visitor* visitor);
     FunDec(){};
     ~FunDec(){};
+
+    //Typechecker
+    void accept(TypeVisitor* visitor);
 };
 
 class Program{
@@ -169,21 +234,9 @@ public:
     Program(){};
     ~Program(){};
     int accept(Visitor* visitor);
-};
 
-
-// NUEVAS
-
-class ForStm: public Stm {
-public:
-    string id; // el i
-    Exp* inicializacion;
-    Exp* condicion;
-    Stm* actualizacion;
-    Body* cuerpo;
-    ForStm(string, Exp*, Exp*, Stm*, Body*);
-    ~ForStm();
-    int accept(Visitor* visitor);
+    //Typechecker
+    void accept(TypeVisitor* visitor);
 };
 
 
