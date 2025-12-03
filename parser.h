@@ -16,9 +16,9 @@ public:
     Parser(Scanner* scanner);       
     Program* parseProgram();
     VarDec* parseAutoDec();
-    FunDec* parseFunDec();
+    FunDec* parseFunDec(const string& tipo, const string& nombreOId);
     Body* parseBody();
-    VarDec* parseVarDec();
+    VarDec* parseVarDec(const string& tipo, const string& nombreOId);
     Stm* parseStm();
     Exp* parseCE();
     Exp* parseBE();

@@ -57,44 +57,59 @@ bool Parser::isAtEnd() {
 
 Program* Parser::parseProgram() {
     Program* p = new Program();
-    // para Auto
-    if (check(Token::AUTO)) {
-        VarDec* vd = parseAutoDec();
-        p->vdlist.push_back(vd);
-        return;
-    }
+    string tipo;
+    string nombreOId;
+    bool esFunDec = false;
 
-    if(check(Token::ID)) {
-        if(check(Token::ID)) {
+    match(Token::ID);
+    tipo = previous->text;
+    match(Token::ID);
+    nombreOId = previous->text;
+
+    if(check(Token::LPAREN)) esFunDec = true;
+
+    if(!esFunDec){
+        p->vdlist.push_back(parseVarDec(tipo, nombreOId));
+        match(Token::SEMICOL);
+        while(!esFunDec) {
+            match(Token::ID);
+            tipo = previous->text;
+            match(Token::ID);
+            nombreOId = previous->text;
+
             if(check(Token::LPAREN)){
-                p->fdlist.push_back(parseFunDec());
-                while(check(Token::FUN)){
-                    p->fdlist.push_back(parseFunDec());
-                }
+                esFunDec = true;
+                break;
             }
             else{
-                p->vdlist.push_back(parseVarDec());
-                while(match(Token::SEMICOL)) {
-                    if(check(Token::ID)) {
-                        p->vdlist.push_back(parseVarDec());
-                    }
-                }
+                p->vdlist.push_back(parseVarDec(tipo, nombreOId));
+                match(Token::SEMICOL);
             }
         }
-        
     }
 
-    if(check(Token::FUN)) {
-        
+    if(esFunDec){
+        p->fdlist.push_back(parseFunDec(tipo, nombreOId));
+        while(match(Token::ID)){
+            tipo = previous->text;
+            match(Token::ID);
+            nombreOId = previous->text;
+            if(check(Token::LPAREN)){
+                p->fdlist.push_back(parseFunDec(tipo, nombreOId));
+            }
         }
+    }
+
     cout << "Parser exitoso" << endl;
+
     return p;
 }
 
-VarDec* Parser::parseAutoDec() {
+/*VarDec* Parser::parseAutoDec() { ANTERIOR IMPLEMENTACION DE AUTO
     VarDec* vd = new VarDec();
     // auto x = CExp, y = CExp...
-    match(Token::AUTO); 
+    match(Token::AUTO);
+    vd->tipo = previous->text;
     match(Token::ID);
     vd->variables.push_back(previous->text);
     match(Token::ASSIGN);
@@ -110,29 +125,41 @@ VarDec* Parser::parseAutoDec() {
     match(Token::SEMICOL);
 
     return vd;
-}
+}*/
 
-VarDec* Parser::parseVarDec(){
+VarDec* Parser::parseVarDec(const string& tipo, const string& id){
     VarDec* vd = new VarDec();
+    vd->tipo = tipo;
+    vd->variables.push_back(id);
     
-    match(Token::ID);
-    vd->tipo = previous->text;
-    match(Token::ID);
-    vd->variables.push_back(previous->text);
-    while(match(Token::COMA)) {
-        match(Token::ID);
-        vd->variables.push_back(previous->text);
+    if(vd->tipo == "auto") { // si es auto, debe tener inicializadores
+        if(!match(Token::ASSIGN)){
+            throw runtime_error("Operador '=' faltante");
+        }
+        vd->inicializadores.push_back(parseCE());
+        while (match(Token::COMA)) {
+            match(Token::ID);
+            vd->variables.push_back(previous->text);
+            if(!match(Token::ASSIGN)){
+                throw runtime_error("Operador '=' faltante");
+            }
+            vd->inicializadores.push_back(parseCE());
+        }
+    }
+    else{
+        while(match(Token::COMA)) {
+            match(Token::ID);
+            vd->variables.push_back(previous->text);
+        }
     }
     return vd;
 }
 
-FunDec *Parser::parseFunDec() {
+FunDec *Parser::parseFunDec(const string& tipo, const string& nombre) {
     FunDec* fd = new FunDec();
+    fd->tipo = tipo;
+    fd->nombre = nombre;
 
-    match(Token::ID);
-    fd->tipo = previous->text;
-    match(Token::ID);
-    fd->nombre = previous->text;
     match(Token::LPAREN);
     if(check(Token::ID)) { // parametros
         while(match(Token::ID)) {
@@ -154,13 +181,21 @@ FunDec *Parser::parseFunDec() {
 
 Body* Parser::parseBody(){
     Body* b = new Body();
+    string tipo;
+    string id;
 
     if(check(Token::ID)) { // si hay declaraciones de variables
-        b->vdlist.push_back(parseVarDec());
+        match(Token::ID);
+        tipo = previous->text;
+        match(Token::ID);
+        id = previous->text;
+        b->vdlist.push_back(parseVarDec(tipo, id));
         while(match(Token::SEMICOL)) {
-            if(check(Token::ID)) {
-                b->vdlist.push_back(parseVarDec());
-            }
+            match(Token::ID);
+            tipo = previous->text;
+            match(Token::ID);
+            id = previous->text;
+            b->vdlist.push_back(parseVarDec(tipo, id));
         }
     }
     b->stmlist.push_back(parseStm()); // minimo una sentencia
@@ -229,10 +264,9 @@ else if (match(Token::IF)) {
     else if (match(Token::FOR)) {
         // for(int i = 0; i <10, i=i+1)
         match(Token::LPAREN);
-        match(Token::ID); // tipo
-        string tipo = previous->text;
-        match(Token::ID); // Inicializacion
-        string i = previous->text; // guardando el i
+        match(Token::ID); // se lee el tipo y se ignora
+        match(Token::ID); // el i
+        string i = previous->text;
         match(Token::ASSIGN);
         Exp* e1 = parseCE(); // parsea el 0
         match(Token::SEMICOL);
@@ -263,7 +297,6 @@ Exp* Parser::parseCE() {
         BinaryOp op = GT_OP;
         Exp* r = parseE();
         l = new BinaryExp(l, r, op);
-        throw runtime_error("Operador '>' no implementado");
     }
     return l;
 }

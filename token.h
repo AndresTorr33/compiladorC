@@ -54,10 +54,7 @@ public:
         
         // para Nuevas operaciones
         GT,
-        FOR,
-
-        // Se crea para detectar el caso de AUTO
-        AUTO
+        FOR
     };
 
     // Atributos

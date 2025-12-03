@@ -103,7 +103,7 @@ public:
 class VarDec{
 public:
     string tipo;
-    list<string> variables;
+    vector<string> variables;
     vector<Exp*> inicializadores; // para soportar int x = 1;
     VarDec();
     int accept(Visitor* visitor);

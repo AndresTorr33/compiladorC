@@ -95,19 +95,52 @@ void TypeChecker::visit(Body* b) {
 // ===========================================================
 
 void TypeChecker::visit(VarDec* v) {
+
     Type* t = new Type();
     if (!t->set_basic_type(v->tipo)) { // para validar que exista el tipo
         cerr << "Error: tipo de variable no válido." << endl;
         exit(0);
     }
 
-    for (const auto& id : v->variables) {
-        if (env.check(id)) { // error, ya declarada en este nivel
-            cerr << "Error: variable '" << id << "' ya declarada." << endl;
+    if(v->tipo == "auto") { // si es auto, debe tener inicializadores
+        if (v->inicializadores.size() != v->variables.size()) {
+            cerr << "Error: numero de inicializadores no coincide con numero de variables declaradas como 'auto'" << endl;
             exit(0);
         }
-        env.add_var(id, t); // cada variable de este VarDec se guarda con el mismo tipo (puntero Type*)
+        // se encuentra el tipo del primer inicializador
+        Type* tipoDePrimerInit = v->inicializadores[0]->accept(this);
+        for (int i = 1; i < v->variables.size(); ++i) {
+            Type* tipo = v->inicializadores[i]->accept(this); // obtiene los tipos de cada inicializador
+            if (!tipo->match(tipoDePrimerInit)) { // valida que el tipo de la expresion coincida con el tipo 'auto'
+                cerr << "Error: tipo de inicializador no coincide con tipo 'auto' para variable '" << v->variables[i] << "'." << endl;
+                exit(0);
+            }
+        }
+
+        t = tipoDePrimerInit; // el tipo de la variable es el de los inicializadores
+        for (auto id : v->variables) {
+            if (env.check(id)) { // error, ya declarada en este nivel
+                cerr << "Error: variable '" << id << "' ya declarada." << endl;
+                exit(0);
+            }
+            env.add_var(id, t); // cada variable de este VarDec se guarda con el mismo tipo (puntero Type*)
+        }
     }
+    else{
+        if(!v->inicializadores.empty()) { // si no es auto, no debe tener inicializadores
+            cerr << "Error: solo variables declaradas como 'auto' pueden tener inicializadores" << endl;
+            exit(0);
+        }
+
+        for (const auto& id : v->variables) { // Que las variables no esten repetidas en el mismo nivel
+            if (env.check(id)) { // error, ya declarada en este nivel
+                cerr << "Error: variable '" << id << "' ya declarada." << endl;
+                exit(0);
+            }
+            env.add_var(id, t); // cada variable de este VarDec se guarda con el mismo tipo (puntero Type*)
+        }
+    }
+    
 }
 
 void TypeChecker::visit(FunDec* f) { // chequeo de parametros y cuerpo
@@ -163,6 +196,45 @@ void TypeChecker::visit(ReturnStm* stm) {
     }
 }
 
+void TypeChecker::visit(IfStm* stm) {
+    Type* tc = stm->condition->accept(this); // obtiene el tipo de la condicion
+    if (!tc->match(boolType)) { // valida que sea bool. 1 < 2 retorna bool
+        cerr << "Error: condición de if debe ser de tipo bool." << endl;
+        exit(0);
+    }
+    stm->then->accept(this); // procesa el body del then
+    if (stm->els) stm->els->accept(this); // procesa el body del else si existe
+}
+
+void TypeChecker::visit(WhileStm* stm) { // valida que sea bool
+    Type* tc = stm->condition->accept(this);
+    if (!tc->match(boolType)) {
+        cerr << "Error: condición de while debe ser de tipo bool." << endl;
+        exit(0);
+    }
+    stm->b->accept(this); // procesa el body del while
+}
+
+void TypeChecker::visit(ForStm* stm) {
+
+    if (!env.check(stm->id)) { // valida que la variable de control exista
+        cerr << "Error: variable '" << stm->id << "' no declarada en for." << endl;
+        exit(0);
+    }
+
+    stm->inicializacion->accept(this);
+
+    Type* tc = stm->condicion->accept(this); // tipo de la condicion
+    if (!tc->match(boolType)) {
+        cerr << "Error: condicion de for debe ser de tipo bool." << endl;
+        exit(0);
+    }
+
+    stm->actualizacion->accept(this); // sentencia de actualizacion
+    stm->cuerpo->accept(this); // procesa el body del for
+    
+}
+
 // ===========================================================
 //   Expresiones
 // ===========================================================
@@ -210,7 +282,7 @@ Type* TypeChecker::visit(BinaryExp* e) {
     }
 }
 
-Type* TypeChecker::visit(NumberExp* e) { return intType; }
+Type* TypeChecker::visit(NumberExp* e) { return intType; } // solo valida ints por ahora
 
 Type* TypeChecker::visit(BoolExp* e) { return boolType; }
 
