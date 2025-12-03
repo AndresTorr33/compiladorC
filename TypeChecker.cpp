@@ -173,24 +173,27 @@ Type* TypeChecker::visit(BinaryExp* e) {
         case MINUS_OP: 
         case MUL_OP: 
         case DIV_OP: 
-        case POW_OP:
+        /*case POW_OP:
             if (!(left->match(intType) && right->match(intType))) {
                 cerr << "Error: operación aritmética requiere operandos int." << endl;
                 exit(0);
             }
             return intType;
-        case LE_OP:
+        */    
+        case LT_OP:
             if (!(left->match(intType) && right->match(intType))) {
                 cerr << "Error: operación aritmética requiere operandos int." << endl;
                 exit(0);
             }
         return boolType;
-        case AND_OP:
+
+        /*case AND_OP:
             if (!(left->match(boolType) && right->match(boolType))) {
                 cerr << "Error: operación logica requiere operandos bool." << endl;
                 exit(0);
             }
         return boolType;
+        */
 
         default:
             cerr << "Error: operador binario no soportado." << endl;

@@ -89,8 +89,8 @@ Token* Scanner::nextToken() {
             case '<': token = new Token(Token::LT,  c); break;
             case '+': token = new Token(Token::PLUS,  c); break;
             case '-': token = new Token(Token::MINUS, c); break;
-            case '*': 
-            if (input[current+1]=='*')
+            case '*': token = new Token(Token::MUL, c); break;
+            /*if (input[current+1]=='*')
             {
                 current++;
                 token = new Token(Token::POW, input, first, current + 1 - first);
@@ -98,7 +98,7 @@ Token* Scanner::nextToken() {
             else{
                 token = new Token(Token::MUL,   c);
             }
-            break;
+            break;*/
             case '/': token = new Token(Token::DIV,   c); break;
             case '(': token = new Token(Token::LPAREN,c); break;
             case ')': token = new Token(Token::RPAREN,c); break;

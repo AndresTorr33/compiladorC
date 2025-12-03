@@ -5,6 +5,8 @@
 #include <list>
 #include <ostream>
 #include <vector>
+#include "semantic_types.h"
+
 using namespace std;
 
 class Visitor;
@@ -17,7 +19,7 @@ enum BinaryOp {
     MINUS_OP, 
     MUL_OP, 
     DIV_OP,
-    POW_OP,
+    // POW_OP,
     LT_OP
 };
 
@@ -99,8 +101,8 @@ public:
 
 class VarDec{
 public:
-    string type;
-    list<string> vars;
+    string tipo;
+    list<string> variables;
     VarDec();
     int accept(Visitor* visitor);
     ~VarDec();
@@ -112,8 +114,8 @@ public:
 
 class Body{
 public:
-    list<Stm*> StmList;
-    list<VarDec*> declarations;
+    list<Stm*> stmlist;
+    list<VarDec*> vdlist;
     int accept(Visitor* visitor);
     Body();
     ~Body();
@@ -133,6 +135,9 @@ public:
     IfStm(Exp* condition, Body* then, Body* els);
     int accept(Visitor* visitor);
     ~IfStm(){};
+
+    //Typechecker
+    void accept(TypeVisitor* visitor);
 };
 
 class WhileStm: public Stm {
@@ -142,6 +147,9 @@ public:
     WhileStm(Exp* condition, Body* b);
     int accept(Visitor* visitor);
     ~WhileStm(){};
+
+    //Typechecker
+    void accept(TypeVisitor* visitor);
 };
 
 
@@ -180,6 +188,9 @@ public:
     ForStm(string, Exp*, Exp*, Stm*, Body*);
     ~ForStm();
     int accept(Visitor* visitor);
+
+    //Typechecker
+    void accept(TypeVisitor* visitor);
 };
 // Nuevo
 
@@ -217,8 +228,8 @@ public:
     string nombre;
     string tipo;
     Body* cuerpo;
-    vector<string> Ptipos;
-    vector<string> Pnombres;
+    vector<string> Tparametros;
+    vector<string> Nparametros;
     int accept(Visitor* visitor);
     FunDec(){};
     ~FunDec(){};
