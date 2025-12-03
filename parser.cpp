@@ -57,22 +57,59 @@ bool Parser::isAtEnd() {
 
 Program* Parser::parseProgram() {
     Program* p = new Program();
-    if(check(Token::VAR)) {
-        p->vdlist.push_back(parseVarDec());
-        while(match(Token::SEMICOL)) {
-            if(check(Token::VAR)) {
+    // para Auto
+    if (check(Token::AUTO)) {
+        VarDec* vd = parseAutoDec();
+        p->vdlist.push_back(vd);
+        return;
+    }
+
+    if(check(Token::INT) || check(Token::BOOL) || check(Token::UNSIGNED) || check(Token::FLOAT) || check(Token::LONG)) {
+        if(check(Token::ID)) {
+            if(check(Token::LPAREN)){
+                p->fdlist.push_back(parseFunDec());
+                while(check(Token::FUN)){
+                    p->fdlist.push_back(parseFunDec());
+                }
+            }
+            else{
                 p->vdlist.push_back(parseVarDec());
+                while(match(Token::SEMICOL)) {
+                    if(check(Token::INT) || check(Token::BOOL) || check(Token::UNSIGNED) || check(Token::FLOAT) || check(Token::LONG)) {
+                        p->vdlist.push_back(parseVarDec());
+                    }
+                }
             }
         }
+        
     }
+
     if(check(Token::FUN)) {
-        p->fdlist.push_back(parseFunDec());
-        while(check(Token::FUN)){
-                p->fdlist.push_back(parseFunDec());
-            }
+        
         }
     cout << "Parser exitoso" << endl;
     return p;
+}
+
+VarDec* Parser::parseAutoDec() {
+    VarDec* vd = new VarDec();
+    // auto x = CExp, y = CExp...
+    match(Token::AUTO); 
+    match(Token::ID);
+    vd->variables.push_back(previous->text);
+    match(Token::ASSIGN);
+    vd->inicializadores.push_back(parseCE());
+
+    while (match(Token::COMA)) {
+        match(Token::ID);
+        vd->variables.push_back(previous->text);
+        match(Token::ASSIGN);
+        vd->inicializadores.push_back(parseCE());
+    }
+
+    match(Token::SEMICOL);
+
+    return vd;
 }
 
 VarDec* Parser::parseVarDec(){
@@ -237,11 +274,12 @@ Exp* Parser::parseE() {
 
 Exp* Parser::parseT() {
     Exp* l = parseF();
-    if (match(Token::POW)) {
+    /*if (match(Token::POW)) {
         BinaryOp op = POW_OP;
         Exp* r = parseF();
         l = new BinaryExp(l, r, op);
     }
+    */
     return l;
 }
 
