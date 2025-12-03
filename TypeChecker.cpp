@@ -13,8 +13,8 @@ Type* BoolExp::accept(TypeVisitor* v) { return v->visit(this); }
 void AssignStm::accept(TypeVisitor* v) { v->visit(this); }
 void PrintStm::accept(TypeVisitor* v) { v->visit(this); }
 void ReturnStm::accept(TypeVisitor* v) { v->visit(this); }
-void IfStm::accept(TypeVisitor* v) { v->visit(this); }
-void WhileStm::accept(TypeVisitor* v) { v->visit(this); }
+void IfStm::accept(TypeVisitor* v) { v->visit(this); } // agregado
+void WhileStm::accept(TypeVisitor* v) { v->visit(this); } // agregado
 void ForStm::accept(TypeVisitor* v) { v->visit(this); } // nuevo
 
 void VarDec::accept(TypeVisitor* v) { v->visit(this); }

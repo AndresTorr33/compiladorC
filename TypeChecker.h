@@ -14,13 +14,15 @@ class NumberExp;
 class Program;
 class PrintStm;
 class AssignStm;
+class IfStm;
+class whileStm;
+class ForStm; // nuevo
 class FunDec;
 class ReturnStm;
 class Body;
 class VarDec;
 class FcallExp;
 class BoolExp;
-class ForExp; // nuevo
 
 class TypeVisitor {
 public:
@@ -35,8 +37,8 @@ public:
     virtual void visit(PrintStm* stm) = 0;
     virtual void visit(AssignStm* stm) = 0;
     virtual void visit(ReturnStm* stm) = 0;
-    virtual void visit(IfStm* stm) = 0;
-    virtual void visit(WhileStm* stm) = 0;
+    virtual void visit(IfStm* stm) = 0; // agregado
+    virtual void visit(WhileStm* stm) = 0; // agregado
     virtual void visit(ForStm* stm) = 0; // nuevo
 
 
@@ -86,8 +88,8 @@ public:
     void visit(PrintStm* stm) override;
     void visit(AssignStm* stm) override;
     void visit(ReturnStm* stm) override;
-    void visit(IfStm* stm) override;
-    void visit(WhileStm* stm) override;
+    void visit(IfStm* stm) override; // agregado
+    void visit(WhileStm* stm) override; // agregado
     void visit(ForStm* stm) override; // nuevo
 
     // --- Expresiones ---
