@@ -226,7 +226,26 @@ else if (match(Token::IF)) {
 
         a = new WhileStm(e, tb);
     }
-    
+    else if (match(Token::FOR)) {
+        // for(int i = 0; i <10, i=i+1)
+        match(Token::LPAREN);
+        match(Token::ID); // tipo
+        string tipo = previous->text;
+        match(Token::ID); // Inicializacion
+        string i = previous->text; // guardando el i
+        match(Token::ASSIGN);
+        Exp* e1 = parseCE(); // parsea el 0
+        match(Token::SEMICOL);
+        Exp* e2 = parseCE(); // Condicion
+        match(Token::SEMICOL);
+        Stm* s = parseStm(); // parsea el i = i+1
+        match(Token::RPAREN);
+        match(Token::LBRACE);
+        Body* body = parseBody();
+        match(Token::RBRACE);
+
+        a = new ForStm(i, e1, e2, s, tb);
+    }
     else{
         throw runtime_error("Error sintáctico");
     }
@@ -234,15 +253,15 @@ else if (match(Token::IF)) {
 }
 
 Exp* Parser::parseCE() {
-    Exp* l = parseBE();
+    Exp* l = parseE();
     if (match(Token::LT)) {
         BinaryOp op = LT_OP;
-        Exp* r = parseBE();
+        Exp* r = parseE();
         l = new BinaryExp(l, r, op);
     }
     else if (match(Token::GT)) {
         BinaryOp op = GT_OP;
-        Exp* r = parseBE();
+        Exp* r = parseE();
         l = new BinaryExp(l, r, op);
         throw runtime_error("Operador '>' no implementado");
     }
@@ -250,8 +269,8 @@ Exp* Parser::parseCE() {
 }
 
 
-Exp* Parser::parseBE() {
-    Exp* l = parseE();
+Exp* Parser::parseE() {
+    Exp* l = parseT();
     while (match(Token::PLUS) || match(Token::MINUS)) {
         BinaryOp op;
         if (previous->type == Token::PLUS){
@@ -259,23 +278,6 @@ Exp* Parser::parseBE() {
         }
         else{
             op = MINUS_OP;
-        }
-        Exp* r = parseE();
-        l = new BinaryExp(l, r, op);
-    }
-    return l;
-}
-
-
-Exp* Parser::parseE() {
-    Exp* l = parseT();
-    while (match(Token::MUL) || match(Token::DIV)) {
-        BinaryOp op;
-        if (previous->type == Token::MUL){
-            op = MUL_OP;
-        }
-        else{
-            op = DIV_OP;
         }
         Exp* r = parseT();
         l = new BinaryExp(l, r, op);
@@ -286,20 +288,38 @@ Exp* Parser::parseE() {
 
 Exp* Parser::parseT() {
     Exp* l = parseF();
-    /*if (match(Token::POW)) {
+    while (match(Token::MUL) || match(Token::DIV)) {
+        BinaryOp op;
+        if (previous->type == Token::MUL){
+            op = MUL_OP;
+        }
+        else{
+            op = DIV_OP;
+        }
+        Exp* r = parseF();
+        l = new BinaryExp(l, r, op);
+    }
+    return l;
+}
+
+/*
+Exp* Parser::parseT() {
+    Exp* l = parseF();
+    if (match(Token::POW)) {
         BinaryOp op = POW_OP;
         Exp* r = parseF();
         l = new BinaryExp(l, r, op);
     }
-    */
+    
     return l;
 }
+*/
 
 Exp* Parser::parseF() {
     Exp* e;
     string nom;
     if (match(Token::NUM)) {
-        return new NumberExp(stoi(previous->text));
+        return new NumberExp(stoi(previous->text)); //stoi: string to int
     }
     else if (match(Token::TRUE)) {
         return new NumberExp(1);
@@ -307,8 +327,7 @@ Exp* Parser::parseF() {
     else if (match(Token::FALSE)) {
         return new NumberExp(0);
     }
-    else if (match(Token::LPAREN))
-    {
+    else if (match(Token::LPAREN)){
         e = parseCE();
         match(Token::RPAREN);
         return e;
