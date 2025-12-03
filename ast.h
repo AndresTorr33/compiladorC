@@ -20,7 +20,8 @@ enum BinaryOp {
     MUL_OP, 
     DIV_OP,
     // POW_OP,
-    LT_OP
+    LT_OP,
+    GT_OP
 };
 
 // Clase abstracta Exp
@@ -103,6 +104,7 @@ class VarDec{
 public:
     string tipo;
     list<string> variables;
+    vector<Exp*> inicializadores; // para soportar int x = 1;
     VarDec();
     int accept(Visitor* visitor);
     ~VarDec();

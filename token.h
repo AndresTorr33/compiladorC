@@ -14,7 +14,7 @@ public:
         MINUS,   // -
         MUL,     // *
         DIV,     // /
-        POW,     // **
+        // POW,     // **
         LPAREN,  // (
         RPAREN,  // )
         SQRT,    // sqrt
@@ -47,6 +47,8 @@ public:
         QUESTION,
         COLON,
         BACKSLASH,
+        PORCENTAJE, // %
+        COMILLAS, // "
         HASHTAG,
         DOT, // para floats
         
@@ -54,12 +56,7 @@ public:
         GT,
         FOR,
 
-        // Para tipos
-        UNSIGNED,
-        INT,
-        FLOAT,
-        LONG,
-        BOOL,
+        // Se crea para detectar el caso de AUTO
         AUTO
     };
 

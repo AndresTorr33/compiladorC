@@ -64,7 +64,7 @@ Program* Parser::parseProgram() {
         return;
     }
 
-    if(check(Token::INT) || check(Token::BOOL) || check(Token::UNSIGNED) || check(Token::FLOAT) || check(Token::LONG)) {
+    if(check(Token::ID)) {
         if(check(Token::ID)) {
             if(check(Token::LPAREN)){
                 p->fdlist.push_back(parseFunDec());
@@ -75,7 +75,7 @@ Program* Parser::parseProgram() {
             else{
                 p->vdlist.push_back(parseVarDec());
                 while(match(Token::SEMICOL)) {
-                    if(check(Token::INT) || check(Token::BOOL) || check(Token::UNSIGNED) || check(Token::FLOAT) || check(Token::LONG)) {
+                    if(check(Token::ID)) {
                         p->vdlist.push_back(parseVarDec());
                     }
                 }
@@ -114,37 +114,39 @@ VarDec* Parser::parseAutoDec() {
 
 VarDec* Parser::parseVarDec(){
     VarDec* vd = new VarDec();
-    match(Token::VAR);
+    
     match(Token::ID);
-    vd->type = previous->text;
+    vd->tipo = previous->text;
     match(Token::ID);
-    vd->vars.push_back(previous->text);
+    vd->variables.push_back(previous->text);
     while(match(Token::COMA)) {
         match(Token::ID);
-        vd->vars.push_back(previous->text);
+        vd->variables.push_back(previous->text);
     }
     return vd;
 }
 
 FunDec *Parser::parseFunDec() {
     FunDec* fd = new FunDec();
-    match(Token::FUN);
+
     match(Token::ID);
     fd->tipo = previous->text;
     match(Token::ID);
     fd->nombre = previous->text;
     match(Token::LPAREN);
-    if(check(Token::ID)) {
+    if(check(Token::ID)) { // parametros
         while(match(Token::ID)) {
-            fd->Ptipos.push_back(previous->text);
+            fd->Tparametros.push_back(previous->text);
             match(Token::ID);
-            fd->Pnombres.push_back(previous->text);
+            fd->Nparametros.push_back(previous->text);
             match(Token::COMA);
         }
     }
     match(Token::RPAREN);
+    match(Token::LBRACE);
     fd->cuerpo = parseBody();
-    match(Token::ENDFUN);
+    match(Token::RBRACE);
+
     return fd;
 }
 
@@ -152,18 +154,20 @@ FunDec *Parser::parseFunDec() {
 
 Body* Parser::parseBody(){
     Body* b = new Body();
-    if(check(Token::VAR)) {
-        b->declarations.push_back(parseVarDec());
+
+    if(check(Token::ID)) { // si hay declaraciones de variables
+        b->vdlist.push_back(parseVarDec());
         while(match(Token::SEMICOL)) {
-            if(check(Token::VAR)) {
-                b->declarations.push_back(parseVarDec());
+            if(check(Token::ID)) {
+                b->vdlist.push_back(parseVarDec());
             }
         }
     }
-    b->StmList.push_back(parseStm());
+    b->stmlist.push_back(parseStm()); // minimo una sentencia
     while(match(Token::SEMICOL)) {
-        b->StmList.push_back(parseStm());
+        b->stmlist.push_back(parseStm());
     }
+
     return b;
 }
 
@@ -181,11 +185,16 @@ Stm* Parser::parseStm() {
     }
     else if(match(Token::PRINT)){
         match(Token::LPAREN);
+        match(Token::COMILLAS);
+        match(Token::PORCENTAJE);
+        match(Token::ID);
+        match(Token::COMILLAS);
+        match(Token::COMA);
         e = parseCE();
         match(Token::RPAREN);
         return new PrintStm(e);
     }
-    else if(match(Token::RETURN)) {
+    else if(match(Token::RETURN)) { // dejado intacto
         ReturnStm* r  = new ReturnStm();
         match(Token::LPAREN);
         r->e = parseCE();
@@ -193,34 +202,31 @@ Stm* Parser::parseStm() {
         return r;
     }
 else if (match(Token::IF)) {
+        match(Token::LPAREN);
         e = parseCE();
-        if (!match(Token::THEN)) {
-            cout << "Error: se esperaba 'then' después de la expresión." << endl;
-            exit(1);
-        }
+        match(Token::RPAREN);
+        match(Token::LBRACE);
         tb = parseBody();
+        match(Token::RBRACE);
         if (match(Token::ELSE)) {
+            match(Token::LBRACE);
             fb = parseBody();
+            match(Token::RBRACE);
         }
-        if (!match(Token::ENDIF)) {
-            cout << "Error: se esperaba 'endif' al final de la declaración de if." << endl;
-            exit(1);
-        }
+
         a = new IfStm(e, tb, fb);
     }
     else if (match(Token::WHILE)) {
+        match(Token::LPAREN);
         e = parseCE();
-        if (!match(Token::DO)) {
-            cout << "Error: se esperaba 'do' después de la expresión." << endl;
-            exit(1);
-        }
+        match(Token::RPAREN);
+        match(Token::LBRACE);
         tb = parseBody();
-        if (!match(Token::ENDWHILE)) {
-            cout << "Error: se esperaba 'endwhile' al final de la declaración." << endl;
-            exit(1);
-        }
+        match(Token::RBRACE);
+
         a = new WhileStm(e, tb);
     }
+    
     else{
         throw runtime_error("Error sintáctico");
     }
@@ -233,6 +239,12 @@ Exp* Parser::parseCE() {
         BinaryOp op = LT_OP;
         Exp* r = parseBE();
         l = new BinaryExp(l, r, op);
+    }
+    else if (match(Token::GT)) {
+        BinaryOp op = GT_OP;
+        Exp* r = parseBE();
+        l = new BinaryExp(l, r, op);
+        throw runtime_error("Operador '>' no implementado");
     }
     return l;
 }
