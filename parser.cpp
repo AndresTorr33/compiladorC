@@ -367,10 +367,10 @@ Exp* Parser::parseF() {
         return new NumberExp(stoi(previous->text)); //stoi: string to int
     }
     else if (match(Token::TRUE)) {
-        return new NumberExp(1);
+        return new BoolExp(1);
     }
     else if (match(Token::FALSE)) {
-        return new NumberExp(0);
+        return new BoolExp(0);
     }
     else if (match(Token::LPAREN)){
         e = parseCE();

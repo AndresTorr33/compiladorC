@@ -79,8 +79,8 @@ class BoolExp : public Exp {
 public:
     int valor;
 
-    BoolExp(){};
-    ~BoolExp(){};
+    BoolExp(int v);
+    ~BoolExp();
 
     int accept(Visitor* visitor);
 

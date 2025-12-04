@@ -42,6 +42,10 @@ IdExp::IdExp(string v) : value(v) {}
 
 IdExp::~IdExp() {}
 
+BoolExp::BoolExp(int v) : valor(v) {}
+
+BoolExp::~BoolExp() {}
+
 
 Stm::~Stm(){}
 

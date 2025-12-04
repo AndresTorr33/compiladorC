@@ -1,8 +1,20 @@
-fun int doble(int x)
-    return(x + x)
-endfun
 
-fun int main()
-    print(doble(21));
-    return(0)
-endfun
+#include <stdio.h>
+
+int main(){
+    int a,b;
+    a = 10;
+    b = 20;
+    if (a < 30){
+        int b;
+        b = 1;
+        printf(" %d\n", b);
+    }
+    else{
+        int b;
+        b = 2;
+        printf(" %d\n", b);
+    }
+    printf(" %d\n", b);
+    return 0;
+}

@@ -30,6 +30,7 @@ public:
     virtual int visit(BinaryExp* exp) = 0;
     virtual int visit(NumberExp* exp) = 0;
     virtual int visit(IdExp* exp) = 0;
+    virtual int visit(BoolExp* exp) = 0; // nuevo
     virtual int visit(Program* p) = 0;
     virtual int visit(PrintStm* stm) = 0;
     virtual int visit(WhileStm* stm) = 0;
@@ -63,6 +64,7 @@ public:
     int visit(BinaryExp* exp) override;
     int visit(NumberExp* exp) override;
     int visit(IdExp* exp) override;
+    int visit(BoolExp* exp) override; // nuevo
     int visit(Program* p) override ;
     int visit(PrintStm* stm) override;
     int visit(AssignStm* stm) override;

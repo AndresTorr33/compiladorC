@@ -1,19 +1,11 @@
-#include <cstdio.h>
+#include <stdio.h> 
 
-int main(){
-    int a,b;
-    a = 10;
-    b = 20;
-    if (a < 30){
-        int b;
-        b = 1;
-        printf(" %d\n", b);
-    }
-    else{
-        int b;
-        b = 2;
-        printf(" %d\n", b);
-    }
-    printf(" %d\n", b);
+int main() {
+    auto x = 5;
+    auto y = true;
+    x = 3;
+    y = 5;
+    printf("%d\n", x);
+    printf("%d\n", y);
     return 0;
 }

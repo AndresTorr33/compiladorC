@@ -1,4 +1,4 @@
-#include <cstdio.h>
+#include <stdio.h>
 
 int id(int x){
     return x;
