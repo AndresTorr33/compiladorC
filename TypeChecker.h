@@ -16,7 +16,7 @@ class PrintStm;
 class AssignStm;
 class IfStm;
 class whileStm;
-class ForStm; // nuevo
+//class ForStm; // nuevo
 class FunDec;
 class ReturnStm;
 class Body;
@@ -39,7 +39,7 @@ public:
     virtual void visit(ReturnStm* stm) = 0;
     virtual void visit(IfStm* stm) = 0; // agregado
     virtual void visit(WhileStm* stm) = 0; // agregado
-    virtual void visit(ForStm* stm) = 0; // nuevo
+    //virtual void visit(ForStm* stm) = 0; // nuevo
 
 
     // --- Expresiones ---
@@ -90,7 +90,7 @@ public:
     void visit(ReturnStm* stm) override;
     void visit(IfStm* stm) override; // agregado
     void visit(WhileStm* stm) override; // agregado
-    void visit(ForStm* stm) override; // nuevo
+    //void visit(ForStm* stm) override; // nuevo
 
     // --- Expresiones ---
     Type* visit(BinaryExp* e) override;

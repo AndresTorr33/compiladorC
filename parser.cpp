@@ -61,7 +61,7 @@ Program* Parser::parseProgram() {
     string nombreOId;
     bool esFunDec = false;
 
-    match(Token::ID);
+    match(Token::TIPO);
     tipo = previous->text;
     match(Token::ID);
     nombreOId = previous->text;
@@ -72,7 +72,7 @@ Program* Parser::parseProgram() {
         p->vdlist.push_back(parseVarDec(tipo, nombreOId));
         match(Token::SEMICOL);
         while(!esFunDec) {
-            match(Token::ID);
+            match(Token::TIPO);
             tipo = previous->text;
             match(Token::ID);
             nombreOId = previous->text;
@@ -90,7 +90,7 @@ Program* Parser::parseProgram() {
 
     if(esFunDec){
         p->fdlist.push_back(parseFunDec(tipo, nombreOId));
-        while(match(Token::ID)){
+        while(match(Token::TIPO)){
             tipo = previous->text;
             match(Token::ID);
             nombreOId = previous->text;
@@ -104,6 +104,8 @@ Program* Parser::parseProgram() {
 
     return p;
 }
+
+
 
 /*VarDec* Parser::parseAutoDec() { ANTERIOR IMPLEMENTACION DE AUTO
     VarDec* vd = new VarDec();
@@ -161,12 +163,15 @@ FunDec *Parser::parseFunDec(const string& tipo, const string& nombre) {
     fd->nombre = nombre;
 
     match(Token::LPAREN);
-    if(check(Token::ID)) { // parametros
-        while(match(Token::ID)) {
+    if(match(Token::TIPO)) { // parametros
+        fd->Tparametros.push_back(previous->text);
+        match(Token::ID);
+        fd->Nparametros.push_back(previous->text);
+        while(match(Token::COMA)) {
+            match(Token::TIPO);
             fd->Tparametros.push_back(previous->text);
             match(Token::ID);
             fd->Nparametros.push_back(previous->text);
-            match(Token::COMA);
         }
     }
     match(Token::RPAREN);
@@ -184,18 +189,20 @@ Body* Parser::parseBody(){
     string tipo;
     string id;
 
-    if(check(Token::ID)) { // si hay declaraciones de variables
-        match(Token::ID);
+    if(check(Token::TIPO)) { // si hay declaraciones de variables
+        match(Token::TIPO);
         tipo = previous->text;
         match(Token::ID);
         id = previous->text;
         b->vdlist.push_back(parseVarDec(tipo, id));
-        while(match(Token::SEMICOL)) {
-            match(Token::ID);
+        match(Token::SEMICOL);
+        while(check(Token::TIPO)){
+            match(Token::TIPO);
             tipo = previous->text;
             match(Token::ID);
             id = previous->text;
             b->vdlist.push_back(parseVarDec(tipo, id));
+            match(Token::SEMICOL);
         }
     }
     b->stmlist.push_back(parseStm()); // minimo una sentencia
@@ -264,7 +271,7 @@ else if (match(Token::IF)) {
     else if (match(Token::FOR)) {
         // for(int i = 0; i <10, i=i+1)
         match(Token::LPAREN);
-        match(Token::ID); // se lee el tipo y se ignora
+        match(Token::TIPO); // se lee el tipo y se ignora
         match(Token::ID); // el i
         string i = previous->text;
         match(Token::ASSIGN);

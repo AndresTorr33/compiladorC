@@ -187,7 +187,7 @@ public:
     Exp* condicion;
     Stm* actualizacion;
     Body* cuerpo;
-    ForStm(string, Exp*, Exp*, Stm*, Body*);
+    ForStm(string id, Exp* inicializacion, Exp* condicion, Stm* actualizacion, Body* cuerpo);
     ~ForStm();
     int accept(Visitor* visitor);
 

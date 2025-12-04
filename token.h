@@ -51,6 +51,7 @@ public:
         COMILLAS, // "
         HASHTAG,
         DOT, // para floats
+        TIPO, // para representar cualquier tipo
         
         // para Nuevas operaciones
         GT,

@@ -53,6 +53,10 @@ IfStm::IfStm(Exp* c, Body* t, Body* e): condition(c), then(t), els(e) {}
 
 WhileStm::WhileStm(Exp* c, Body* t): condition(c), b(t) {}
 
+// NUEVO
+ForStm::ForStm(string id, Exp* inic, Exp* cond, Stm* act, Body* body):
+    id(id), inicializacion(inic), condicion(cond), actualizacion(act), cuerpo(body) {}
+
 
 PrintStm::PrintStm(Exp* expresion){
     e=expresion;

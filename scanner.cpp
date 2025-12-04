@@ -72,8 +72,13 @@ Token* Scanner::nextToken() {
 
         // NUEVOS TOKENS
         else if (lexema=="for") return new Token(Token::FOR, input, first, current - first);
-        
-        else if (lexema=="auto") return new Token(Token::AUTO, input, first, current - first);
+
+        else if (lexema=="int") return new Token(Token::TIPO, input, first, current - first);
+        else if (lexema=="long") return new Token(Token::TIPO, input, first, current - first);
+        else if (lexema=="bool") return new Token(Token::TIPO, input, first, current - first);
+        else if (lexema=="float") return new Token(Token::TIPO, input, first, current - first);
+        else if (lexema=="auto") return new Token(Token::TIPO, input, first, current - first);
+        else if (lexema=="unsigned") return new Token(Token::TIPO, input, first, current - first);
         
 
         else return new Token(Token::ID, input, first, current - first);

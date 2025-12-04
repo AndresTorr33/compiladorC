@@ -15,7 +15,7 @@ void PrintStm::accept(TypeVisitor* v) { v->visit(this); }
 void ReturnStm::accept(TypeVisitor* v) { v->visit(this); }
 void IfStm::accept(TypeVisitor* v) { v->visit(this); } // agregado
 void WhileStm::accept(TypeVisitor* v) { v->visit(this); } // agregado
-void ForStm::accept(TypeVisitor* v) { v->visit(this); } // nuevo
+//void ForStm::accept(TypeVisitor* v) { v->visit(this); } // nuevo
 
 void VarDec::accept(TypeVisitor* v) { v->visit(this); }
 void FunDec::accept(TypeVisitor* v) { v->visit(this); }
@@ -215,6 +215,7 @@ void TypeChecker::visit(WhileStm* stm) { // valida que sea bool
     stm->b->accept(this); // procesa el body del while
 }
 
+/*
 void TypeChecker::visit(ForStm* stm) {
 
     if (!env.check(stm->id)) { // valida que la variable de control exista
@@ -233,7 +234,7 @@ void TypeChecker::visit(ForStm* stm) {
     stm->actualizacion->accept(this); // sentencia de actualizacion
     stm->cuerpo->accept(this); // procesa el body del for
     
-}
+}*/
 
 // ===========================================================
 //   Expresiones
