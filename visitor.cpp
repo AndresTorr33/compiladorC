@@ -203,27 +203,21 @@ int GenCodeVisitor::visit(WhileStm* stm) {
 
 // nuevo
 int GenCodeVisitor::visit(ForStm* stm) {
-    // inicializacion
-    if (stm->inicializacion) stm->inicializacion->accept(this);
-
+    //env.add_level();
     int label = labelcont++;
+    stm->inicializacion->accept(this); // aceptando la inicialización
+
+    out << " movq %rax, " << memoria[stm->id] << "(%rbp)"<<endl;
+    //out << " movq %rax, " << env.lookup(stm->id) << "(%rbp)"<<endl;
     out << "for_" << label << ":"<<endl;
-
-    // condicion
-    if (stm->condicion) {
-        stm->condicion->accept(this);
-        out << " cmpq $0, %rax" << endl;
-        out << " je endfor_" << label << endl;
-    }
-
-    // cuerpo
-    if (stm->cuerpo) stm->cuerpo->accept(this);
-
-    // actualizacion
-    if (stm->actualizacion) stm->actualizacion->accept(this);
-
+    stm->condicion->accept(this);
+    out << " cmpq $0, %rax" << endl;
+    out << " je endfor_" << label << endl;
+    stm->actualizacion->accept(this); // aceptando la actualización
+    stm->cuerpo->accept(this); // aceptando el cuerpo del for
     out << " jmp for_" << label << endl;
     out << "endfor_" << label << ":"<< endl;
+    //env.remove_level();
     return 0;
 }
 

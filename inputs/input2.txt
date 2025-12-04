@@ -5,11 +5,13 @@ int main() {
     int y;
     x = 1;
     y = 2;
+
     if(x < 5){
         printf(" %d\n", x);
     }
     else{
         printf(" %d\n", y);
     }
+    
     return 0;
 }

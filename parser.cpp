@@ -290,7 +290,7 @@ else if (match(Token::IF)) {
         Body* body = parseBody();
         match(Token::RBRACE);
 
-        a = new ForStm(i, e1, e2, s, tb);
+        a = new ForStm(i, e1, e2, s, body);
     }
     else{
         throw runtime_error("Error sintáctico");
