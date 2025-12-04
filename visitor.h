@@ -14,6 +14,7 @@ class PrintStm;
 class WhileStm;
 class IfStm;
 class AssignStm;
+class ForStm; // Nuevo
 class Body;
 class Vardec;
 class FcallExp;
@@ -32,6 +33,7 @@ public:
     virtual int visit(WhileStm* stm) = 0;
     virtual int visit(IfStm* stm) = 0;
     virtual int visit(AssignStm* stm) = 0;
+    virtual int visit(ForStm* stm) = 0; // nuevo
     virtual int visit(Body* body) = 0;
     virtual int visit(VarDec* vd) = 0;
     virtual int visit(FcallExp* fcall) = 0;
@@ -60,6 +62,7 @@ public:
     int visit(AssignStm* stm) override;
     int visit(WhileStm* stm) override;
     int visit(IfStm* stm) override;
+    int visit(ForStm* stm) override; // nuevo
     int visit(Body* body) override;
     int visit(VarDec* vd) override;
     int visit(FcallExp* fcall) override;

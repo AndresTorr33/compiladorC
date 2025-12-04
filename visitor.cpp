@@ -40,6 +40,10 @@ int WhileStm::accept(Visitor* visitor) {
     return visitor->visit(this);
 }
 
+int ForStm::accept(Visitor* visitor) { // NUEVO
+    return visitor->visit(this);
+}
+
 int Body::accept(Visitor* visitor){
     return visitor->visit(this);
 }
@@ -90,7 +94,7 @@ out << ".data\nprint_fmt: .string \"%ld \\n\""<<endl;
 }
 
 int GenCodeVisitor::visit(VarDec* stm) {
-    for (auto var : stm->vars) {
+    for (auto var : stm->variables) {
         if (!entornoFuncion) {
             memoriaGlobal[var] = true;
         } else {
@@ -159,10 +163,10 @@ int GenCodeVisitor::visit(PrintStm* stm) {
 
 
 int GenCodeVisitor::visit(Body* b) {
-    for (auto dec : b->declarations){
+    for (auto dec : b->vdlist){
         dec->accept(this);
     }
-    for (auto s : b->StmList){
+    for (auto s : b->stmlist){
         s->accept(this);
     }
         return 0;
@@ -210,18 +214,18 @@ int GenCodeVisitor::visit(FunDec* f) {
     out << f->nombre <<  ":" << endl;
     out << " pushq %rbp" << endl;
     out << " movq %rsp, %rbp" << endl;
-    int size = f->Pnombres.size();
+    int size = f->Nparametros.size();
     for (int i = 0; i < size; i++) {
-        memoria[f->Pnombres[i]]=offset;
+        memoria[f->Nparametros[i]]=offset;
         out << " movq " << argRegs[i] << "," << offset << "(%rbp)" << endl;
         offset -= 8;
     }
-    for (auto i: f->cuerpo->declarations){
+    for (auto i: f->cuerpo->vdlist){
         i->accept(this);
     }
     int reserva = -offset - 8;
     out << " subq $" << reserva << ", %rsp" << endl;
-    for (auto i: f->cuerpo->StmList){
+    for (auto i: f->cuerpo->stmlist){
         i->accept(this);
     }
     out << ".end_"<< f->nombre << ":"<< endl;
