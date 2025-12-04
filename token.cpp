@@ -58,6 +58,8 @@ ostream& operator<<(ostream& outs, const Token& tok) {
         case Token::QUESTION:    outs << "TOKEN(QUESTION, \""    << tok.text << "\")"; break;
         case Token::COLON:    outs << "TOKEN(COLON, \""    << tok.text << "\")"; break;
         case Token::BACKSLASH:    outs << "TOKEN(BACKSLASH, \""    << tok.text << "\")"; break;
+        case Token::PORCENTAJE:    outs << "TOKEN(PORCENTAJE, \""    << tok.text << "\")"; break;
+        case Token::COMILLAS:    outs << "TOKEN(COMILLAS, \""    << tok.text << "\")"; break;
         case Token::HASHTAG:    outs << "TOKEN(HASHTAG, \""    << tok.text << "\")"; break;
         case Token::DOT:    outs << "TOKEN(DOT, \""    << tok.text << "\")"; break;
         case Token::GT:    outs << "TOKEN(GT, \""    << tok.text << "\")"; break;

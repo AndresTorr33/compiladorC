@@ -96,7 +96,7 @@ Token* Scanner::nextToken() {
         else return new Token(Token::ID, input, first, current - first);
     }
     // Operadores
-    else if (strchr("+/-*();=<,{}?:\\.", c)) { // aun no hay >
+    else if (strchr("+/-*();=<,{}?:\\.%\"", c)) { // aun no hay >
         switch (c) {
             case '<': token = new Token(Token::LT,  c); break;
             case '+': token = new Token(Token::PLUS,  c); break;
@@ -119,12 +119,14 @@ Token* Scanner::nextToken() {
             case ',': token = new Token(Token::COMA,c); break;
 
             // NUEVOS
-            case '{': token = new Token(Token::RBRACE,c); break;
-            case '}': token = new Token(Token::LBRACE,c); break;
+            case '{': token = new Token(Token::LBRACE,c); break;
+            case '}': token = new Token(Token::RBRACE,c); break;
             case '?': token = new Token(Token::QUESTION,c); break;
             case ':': token = new Token(Token::COLON,c); break;
             case '\\': token = new Token(Token::BACKSLASH,c); break;
             case '.': token = new Token(Token::DOT,c); break;
+            case '%': token = new Token(Token::PORCENTAJE,c); break;
+            case '\"': token = new Token(Token::COMILLAS,c); break;
 
         }
         current++;

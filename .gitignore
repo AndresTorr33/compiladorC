@@ -10,3 +10,5 @@ a.out
 *.o
 temp/
 .vscode/
+a.exe
+semantic_types.h.gch

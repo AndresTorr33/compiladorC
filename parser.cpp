@@ -235,6 +235,8 @@ Stm* Parser::parseStm() {
         match(Token::COMILLAS);
         match(Token::PORCENTAJE);
         match(Token::ID);
+        match(Token::BACKSLASH);
+        match(Token::ID);
         match(Token::COMILLAS);
         match(Token::COMA);
         e = parseCE();

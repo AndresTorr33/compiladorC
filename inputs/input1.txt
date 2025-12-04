@@ -3,5 +3,7 @@
 int main() {
     int x;
     auto y = 5;
+    x=3;
+    printf("%d\n", x);
     return 0;
 }
