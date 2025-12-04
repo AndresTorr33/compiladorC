@@ -194,8 +194,19 @@ public:
     //Typechecker
     void accept(TypeVisitor* visitor);
 };
+
 // Nuevo
 
+class FcallStm: public Stm {
+public:
+    Exp* fcall;
+    FcallStm(Exp*);
+    ~FcallStm();
+    int accept(Visitor* visitor);
+
+    //TypeChecker
+    void accept(TypeVisitor* visitor);
+};
 
 
 

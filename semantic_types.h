@@ -12,7 +12,7 @@ using namespace std;
 class Type {
 public:
     enum TType { NOTYPE, VOID, INT, BOOL, UNSIGNED, FLOAT, LONG, AUTO };
-    static const char* type_names[8]; // antes eran solo 4
+    //static const char* type_names[8]; // antes eran solo 4
 
     TType ttype;
 
@@ -48,7 +48,7 @@ public:
 
 };
 
-inline const char* Type::type_names[8] = { "notype", "void", "int", "bool", "unsigned", "float", "long", "auto" };
+//inline const char* Type::type_names[8] = { "notype", "void", "int", "bool", "unsigned", "float", "long", "auto" };
 // antes eran solo 4
 
 #endif // SEMANTIC_TYPES_H

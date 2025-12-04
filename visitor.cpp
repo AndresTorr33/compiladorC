@@ -44,6 +44,10 @@ int ForStm::accept(Visitor* visitor) { // NUEVO
     return visitor->visit(this);
 }
 
+int FcallStm::accept(Visitor* visitor) { // NUEVO
+    return visitor->visit(this);
+}
+
 int Body::accept(Visitor* visitor){
     return visitor->visit(this);
 }
@@ -194,6 +198,40 @@ int GenCodeVisitor::visit(WhileStm* stm) {
     stm->b->accept(this);
     out << " jmp while_" << label << endl;
     out << "endwhile_" << label << ":"<< endl;
+    return 0;
+}
+
+// nuevo
+int GenCodeVisitor::visit(ForStm* stm) {
+    // inicializacion
+    if (stm->inicializacion) stm->inicializacion->accept(this);
+
+    int label = labelcont++;
+    out << "for_" << label << ":"<<endl;
+
+    // condicion
+    if (stm->condicion) {
+        stm->condicion->accept(this);
+        out << " cmpq $0, %rax" << endl;
+        out << " je endfor_" << label << endl;
+    }
+
+    // cuerpo
+    if (stm->cuerpo) stm->cuerpo->accept(this);
+
+    // actualizacion
+    if (stm->actualizacion) stm->actualizacion->accept(this);
+
+    out << " jmp for_" << label << endl;
+    out << "endfor_" << label << ":"<< endl;
+    return 0;
+}
+
+
+// nuevo
+
+int GenCodeVisitor::visit(FcallStm* stm) {
+    stm->fcall->accept(this);
     return 0;
 }
 

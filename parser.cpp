@@ -220,10 +220,23 @@ Stm* Parser::parseStm() {
     Body* tb = nullptr;
     Body* fb = nullptr;
     if(match(Token::ID)){
-        variable = previous->text;
+        string nom = previous->text;
+        if(check(Token::LPAREN)){
+            match(Token::LPAREN);
+            FcallExp* fcall = new FcallExp();
+            fcall->nombre = nom;
+            if(!check(Token::RPAREN)){
+                fcall->argumentos.push_back(parseCE());
+                while(match(Token::COMA)){
+                    fcall->argumentos.push_back(parseCE());
+                }
+            }
+            match(Token::RPAREN);
+            return new FcallStm(fcall);
+        }
         match(Token::ASSIGN);
         e = parseCE();
-        return new AssignStm(variable,e);
+        return new AssignStm(nom,e);
     }
     else if(match(Token::PRINT)){
         match(Token::LPAREN);

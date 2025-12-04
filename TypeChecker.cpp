@@ -15,7 +15,8 @@ void PrintStm::accept(TypeVisitor* v) { v->visit(this); }
 void ReturnStm::accept(TypeVisitor* v) { v->visit(this); }
 void IfStm::accept(TypeVisitor* v) { v->visit(this); } // agregado
 void WhileStm::accept(TypeVisitor* v) { v->visit(this); } // agregado
-//void ForStm::accept(TypeVisitor* v) { v->visit(this); } // nuevo
+void ForStm::accept(TypeVisitor* v) { v->visit(this); } // nuevo
+void FcallStm::accept(TypeVisitor* v) { v->visit(this); } // nuevo
 
 void VarDec::accept(TypeVisitor* v) { v->visit(this); }
 void FunDec::accept(TypeVisitor* v) { v->visit(this); }
@@ -235,6 +236,15 @@ void TypeChecker::visit(ForStm* stm) {
     stm->cuerpo->accept(this); // procesa el body del for
     
 }*/
+
+void TypeChecker::visit(ForStm *stm) {}
+
+// Nuevo
+void TypeChecker::visit(FcallStm *stm) {
+    if (stm and stm->fcall) { // validar que la funcion exista y retorna tipo
+        stm->fcall->accept(this);
+    }
+}
 
 // ===========================================================
 //   Expresiones

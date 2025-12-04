@@ -5,6 +5,7 @@
 #include "parser.h"
 #include "ast.h"
 #include "visitor.h"
+#include "TypeChecker.h"
 
 using namespace std;
 
@@ -48,6 +49,10 @@ int main(int argc, const char* argv[]) {
             cerr << "Error al crear el archivo de salida: " << outputFilename << endl;
             return 1;
         }
+
+    cout << "\n=== verificacion de tipos ===\n";
+    TypeChecker tc;
+    tc.typecheck(program);
 
     cout << "Generando codigo ensamblador en " << outputFilename << endl;
     GenCodeVisitor codigo(outfile);

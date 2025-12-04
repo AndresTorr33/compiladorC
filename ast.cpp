@@ -56,6 +56,11 @@ WhileStm::WhileStm(Exp* c, Body* t): condition(c), b(t) {}
 // NUEVO
 ForStm::ForStm(string id, Exp* inic, Exp* cond, Stm* act, Body* body):
     id(id), inicializacion(inic), condicion(cond), actualizacion(act), cuerpo(body) {}
+ForStm::~ForStm() {}
+
+//NUEVO
+FcallStm::FcallStm(Exp* fcall): fcall(fcall) {}
+FcallStm::~FcallStm() {}
 
 
 PrintStm::PrintStm(Exp* expresion){
