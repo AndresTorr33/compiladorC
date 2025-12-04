@@ -5,6 +5,8 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include "environment.h"
+#include "TypeChecker.h"
 using namespace std;
 
 class BinaryExp;
@@ -46,9 +48,12 @@ public:
 class GenCodeVisitor : public Visitor {
 private:
     std::ostream& out;
+    Environment<int> env;
 public:
+    TypeChecker tipe;
     GenCodeVisitor(std::ostream& out) : out(out) {}
     int generar(Program* program);
+    unordered_map<string,Type*> fun_reserva;
     unordered_map<string, int> memoria;
     unordered_map<string, bool> memoriaGlobal;
     int offset = -8;

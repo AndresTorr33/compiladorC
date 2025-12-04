@@ -2,6 +2,7 @@
 #include "ast.h"
 #include "visitor.h"
 #include <unordered_map>
+#include "environment.h"
 using namespace std;
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -72,6 +73,10 @@ int ReturnStm::accept(Visitor* visitor){
 ///////////////////////////////////////////////////////////////////////////////////
 
 int GenCodeVisitor::generar(Program* program) {
+    tipe.typecheck(program);
+    env.clear();
+    env.add_level();
+    fun_reserva = tipe.functions;
     program->accept(this);
         return 0;
 }
@@ -137,7 +142,7 @@ int GenCodeVisitor::visit(BinaryExp* exp) {
         case LT_OP:
             out << " cmpq %rcx, %rax\n"
                       << " movl $0, %eax\n"
-                      << " setle %al\n"
+                      << " setl %al\n"
                       << " movzbq %al, %rax\n";
             break;
     }
@@ -178,13 +183,14 @@ int GenCodeVisitor::visit(Body* b) {
 
 int GenCodeVisitor::visit(IfStm* stm) {
     int label = labelcont++;
-    stm->condition->accept(this);
+    stm->condition->accept(this); 
+    env.add_level();
     out << " cmpq $0, %rax"<<endl;
     out << " je else_" << label << endl;
    stm->then->accept(this);
     out << " jmp endif_" << label << endl;
     out << " else_" << label << ":"<< endl;
-    if (stm->els) stm->els->accept(this);
+    if (stm->els){ env.add_level(); stm->els->accept(this);}
     out << "endif_" << label << ":"<< endl;
     return 0;
 }
@@ -201,14 +207,13 @@ int GenCodeVisitor::visit(WhileStm* stm) {
     return 0;
 }
 
-// nuevo
 int GenCodeVisitor::visit(ForStm* stm) {
-    //env.add_level();
+    env.add_level();
     int label = labelcont++;
     stm->inicializacion->accept(this); // aceptando la inicialización
 
-    out << " movq %rax, " << memoria[stm->id] << "(%rbp)"<<endl;
-    //out << " movq %rax, " << env.lookup(stm->id) << "(%rbp)"<<endl;
+    //out << " movq %rax, " << memoria[stm->id] << "(%rbp)"<<endl;
+    out << " movq %rax, " << env.lookup(stm->id) << "(%rbp)"<<endl;
     out << "for_" << label << ":"<<endl;
     stm->condicion->accept(this);
     out << " cmpq $0, %rax" << endl;
@@ -217,7 +222,7 @@ int GenCodeVisitor::visit(ForStm* stm) {
     stm->cuerpo->accept(this); // aceptando el cuerpo del for
     out << " jmp for_" << label << endl;
     out << "endfor_" << label << ":"<< endl;
-    //env.remove_level();
+    env.remove_level();
     return 0;
 }
 
@@ -241,6 +246,7 @@ int GenCodeVisitor::visit(FunDec* f) {
     memoria.clear();
     offset = -8;
     nombreFuncion = f->nombre;
+    env.add_level();
     vector<std::string> argRegs = {"%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9"};
     out << ".globl " << f->nombre << endl;
     out << f->nombre <<  ":" << endl;
@@ -264,6 +270,7 @@ int GenCodeVisitor::visit(FunDec* f) {
     out << "leave" << endl;
     out << "ret" << endl;
     entornoFuncion = false;
+    env.remove_level();
     return 0;
 }
 
