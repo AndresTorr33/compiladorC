@@ -120,7 +120,7 @@ void TypeChecker::visit(VarDec* v) {
 
         t = tipoDePrimerInit; // el tipo de la variable es el de los inicializadores
         for (auto id : v->variables) {
-            if (env.check(id)) { // error, ya declarada en este nivel
+            if (env.check_current(id)) { // error, ya declarada en este nivel
                 cerr << "Error: variable '" << id << "' ya declarada." << endl;
                 exit(0);
             }
@@ -134,7 +134,7 @@ void TypeChecker::visit(VarDec* v) {
         }
 
         for (const auto& id : v->variables) { // Que las variables no esten repetidas en el mismo nivel
-            if (env.check(id)) { // error, ya declarada en este nivel
+            if (env.check_current(id)) { // error, ya declarada en este nivel
                 cerr << "Error: variable '" << id << "' ya declarada." << endl;
                 exit(0);
             }
@@ -216,26 +216,26 @@ void TypeChecker::visit(WhileStm* stm) { // valida que sea bool
     stm->b->accept(this); // procesa el body del while
 }
 
-/*
-void TypeChecker::visit(ForStm* stm) {
 
-    if (!env.check(stm->id)) { // valida que la variable de control exista
-        cerr << "Error: variable '" << stm->id << "' no declarada en for." << endl;
-        exit(0);
-    }
+// void TypeChecker::visit(ForStm* stm) {
 
-    stm->inicializacion->accept(this);
+//     if (!env.check(stm->id)) { // valida que la variable de control exista
+//         cerr << "Error: variable '" << stm->id << "' no declarada en for." << endl;
+//         exit(0);
+//     }
 
-    Type* tc = stm->condicion->accept(this); // tipo de la condicion
-    if (!tc->match(boolType)) {
-        cerr << "Error: condicion de for debe ser de tipo bool." << endl;
-        exit(0);
-    }
+//     stm->inicializacion->accept(this);
 
-    stm->actualizacion->accept(this); // sentencia de actualizacion
-    stm->cuerpo->accept(this); // procesa el body del for
+//     Type* tc = stm->condicion->accept(this); // tipo de la condicion
+//     if (!tc->match(boolType)) {
+//         cerr << "Error: condicion de for debe ser de tipo bool." << endl;
+//         exit(0);
+//     }
+
+//     stm->actualizacion->accept(this); // sentencia de actualizacion
+//     stm->cuerpo->accept(this); // procesa el body del for
     
-}*/
+// }
 
 void TypeChecker::visit(ForStm *stm) {}
 

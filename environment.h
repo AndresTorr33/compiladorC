@@ -76,6 +76,12 @@ public:
         return (search_rib(x) >= 0);
     }
 
+    // Verifica solo en el nivel actual
+    bool check_current(const string& x) const {
+        if (ribs.empty()) return false;
+        return ribs.back().find(x) != ribs.back().end();
+    }
+
     // Busca y devuelve el valor de una variable
     // Si no existe, devuelve un valor por defecto de T
     T lookup(const string& x) const {
