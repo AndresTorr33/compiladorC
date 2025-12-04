@@ -189,25 +189,17 @@ Body* Parser::parseBody(){
     string tipo;
     string id;
 
-    if(check(Token::TIPO)) { // si hay declaraciones de variables
+    while(check(Token::TIPO)) { // declaraciones de variables
         match(Token::TIPO);
         tipo = previous->text;
         match(Token::ID);
         id = previous->text;
         b->vdlist.push_back(parseVarDec(tipo, id));
         match(Token::SEMICOL);
-        while(check(Token::TIPO)){
-            match(Token::TIPO);
-            tipo = previous->text;
-            match(Token::ID);
-            id = previous->text;
-            b->vdlist.push_back(parseVarDec(tipo, id));
-            match(Token::SEMICOL);
-        }
     }
-    b->stmlist.push_back(parseStm()); // minimo una sentencia
-    while(match(Token::SEMICOL)) {
-        b->stmlist.push_back(parseStm());
+    while (!check(Token::RBRACE) and !isAtEnd()) { // mientra no haya una } o sea el eof
+        b->stmlist.push_back(parseStm()); // sentencia
+        if (!match(Token::SEMICOL)) break; // sin ';' se asume fin de sentencias
     }
 
     return b;
@@ -251,9 +243,7 @@ Stm* Parser::parseStm() {
     }
     else if(match(Token::RETURN)) { // dejado intacto
         ReturnStm* r  = new ReturnStm();
-        match(Token::LPAREN);
         r->e = parseCE();
-        match(Token::RPAREN);
         return r;
     }
 else if (match(Token::IF)) {

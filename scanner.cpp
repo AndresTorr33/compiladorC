@@ -32,6 +32,18 @@ Token* Scanner::nextToken() {
     while (current < input.length() && is_white_space(input[current])) 
         current++;
 
+    // Ignorar directivas de preprocesador (#include, etc.): saltar hasta fin de línea
+    while (current < input.length() && input[current] == '#') {
+        while (current < input.length() && input[current] != '\n')
+            current++;
+        while (current < input.length() && is_white_space(input[current]))
+            current++;
+    }
+
+    // Saltar espacios en blanco
+    while (current < input.length() && is_white_space(input[current])) 
+        current++;
+
     // Fin de la entrada
     if (current >= input.length()) 
         return new Token(Token::END);
