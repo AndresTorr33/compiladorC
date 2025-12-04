@@ -1,8 +1,11 @@
-fun int id(int x)
-    return(x)
-endfun
+#include <stdio.h>
 
-fun int main()
-    print(id(42));
-    return(0)
-endfun
+int main() {
+    int x;
+    x = 1;
+    for (int i = 0; i < 10; i++) {
+        x = x + 1;
+    }
+    printf(" %d\n", x);
+    return 0;
+}

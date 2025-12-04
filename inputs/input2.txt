@@ -1,8 +1,15 @@
-fun int main()
-    var int a;
-    a = 10;
-    if a < 20 then
-        print(a)
-    endif
-    return(0)
-endfun
+#include <stdio.h>
+
+int main() {
+    int x;
+    int y;
+    x = 1;
+    y = 2;
+    if(x < 5){
+        printf(" %d\n", x);
+    }
+    else{
+        printf(" %d\n", y);
+    }
+    return 0;
+}

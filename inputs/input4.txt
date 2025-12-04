@@ -1,9 +1,10 @@
-fun int main()
-    var int i;
-    i = 0;
-    while i < 3 do
-        print(i);
-        i = i + 1
-    endwhile
-    return(0)
-endfun
+#include <cstdio.h>
+
+int id(int x){
+    return x;
+}
+
+int main(){
+    printf("%d\n", id(42));
+    return 0;
+}
